@@ -3,6 +3,8 @@ import os
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
+from airflow.contrib.operators.spark_submit_operator import SparkSubmitOperator
+
 from datetime import datetime, timedelta, date
 
 from requestURL import pingLink
@@ -38,13 +40,22 @@ with DAG(
     )
 
     t4 = BashOperator(
-        task_id='new',
+        task_id='head',
         bash_command=f'head {AIRHOME}/{CSVFOLDER}/acquisition_samples.csv'
     )
 
-    t1.set_downstream(t2)
-    t2.set_downstream(t3)
-    t3.set_downstream(t4)
+    t5 = SparkSubmitOperator(
+        task_id = "spark-job",
+        application = f"{AIRHOME}/dags/spark-job.py",
+        conn_id = "spark_default"
+    )
+
+
+    t5.set_downstream(t1)
+
+    #t1.set_downstream(t2)
+    #t2.set_downstream(t3)
+    #t3.set_downstream(t4)
 
 
 
