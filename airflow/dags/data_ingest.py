@@ -59,31 +59,8 @@ with DAG(
     #     application_args = [f"{AIRHOME}", f"{CSVFOLDER}"]
     # )
 
-    # t6 = SSHOperator(
-    #     task_id="Set_Export_PATH",
-    #     ssh_conn_id="hadoop_default",
-    #     command="export PATH=/opt/hadoop-3.2.1/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin "
-    # )
 
-    # t7 = SSHOperator(
-    #     task_id="Set_Export_JAVA_HOME",
-    #     ssh_conn_id="hadoop_default",
-    #     command="export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 "
-    # )
-
-    # t8 = SSHOperator(
-    #     task_id="Make_Directory",
-    #     ssh_conn_id="hadoop_default",
-    #     command=f"hdfs dfs -mkdir /data/{CSVFOLDER} "
-    # )
-
-    # t9 = SSHOperator(
-    #     task_id="HDFS_Put_FoodData",
-    #     ssh_conn_id="hadoop_default",
-    #     command=f"hdfs dfs -put /data/{CSVFOLDER} /data/{CSVFOLDER} "
-    # )
-
-    t10 = BashOperator(
+    t6 = BashOperator(
         task_id="spark-job",
         bash_command=f"spark-submit {AIRHOME}/dags/spark-job.py {AIRHOME} {CSVFOLDER}"
         #application_args=[f"{AIRHOME}", f"{CSVFOLDER}"]
@@ -91,6 +68,7 @@ with DAG(
 
     # t5.set_downstream(t6)
     t5.set_downstream(t1)
+    t1.set_downstream(t6)
     # t7.set_downstream(t8)
     # t8.set_downstream(t9)
     # t9.set_downstream(t10)

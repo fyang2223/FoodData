@@ -25,15 +25,9 @@ RUN chmod 777 $SPARK_HOME
 
 #ENV PATH $PATH:/opt/spark-3.3.0-bin-hadoop3/bin
 RUN export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
-#RUN pip install pyspark
-
-# Create ssh keypair on airflow machine. -q quiet, -t keytype, -N passphrase, -C unique name, -f outputfile
-# RUN ssh-keygen -q -t ed25519 -N "" -C "AirflowKey" -f /opt/airflow/AirflowKey <<< y
-# DONT DO ABOVE. Instead, the mounted keys volume should have user-generated public and private keys in them already with the filenames "AirflowKey(.pub)"
-# ssh-keygen -t ed25519 -N "" -C "AirflowKey" -f ~/Documents/Docker_Project/airflow/keys/AirflowKey
 
 USER airflow
 
-RUN pip install apache-airflow-providers-apache-spark
+RUN pip install apache-airflow-providers-apache-spark pandas
 
 USER root

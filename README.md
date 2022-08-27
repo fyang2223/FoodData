@@ -39,7 +39,7 @@ docker-compose up
 ```
 If `docker-compose build` fails, delete the namenode image in Docker Desktop first, and try again.
 
-3. Enter the running namenode container, and execute the `my_entrypoint.sh` script, which copies Airflow's public key located in the mounted volume to the authorized_keys file in the root user's home volume (which is /root, but is /home/user1 for another user called user1). It then starts the SSH service.
+3. Enter the running namenode container, and execute the `my_entrypoint.sh` script, which copies Airflow's public key located in the mounted volume to the authorized_keys file in the namenode root user's home volume (which is /root, but is /home/user1 for another user called user1). It then starts the SSH service.
 ```
 docker exec -it namenode bash
 ```
@@ -47,7 +47,20 @@ docker exec -it namenode bash
 ./entrypoint.sh
 ```
 
+4. 
 
+x. Set up connections in airflow
+conn id: spark_default
+conn type: spark
+host: spark://spark
+port: 7077
+
+conn id: hadoop_default
+conn type: ssh
+host: namenode
+username: root
+port: 22
+extra: {"key_file": "/opt/airflow/keys/AirflowKey"}
 
 
 
