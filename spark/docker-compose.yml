@@ -11,8 +11,8 @@ services:
       - SPARK_SSL_ENABLED=no
     ports:
       - '8081:8080'
-    # volumes:
-    #   - ../airflow/data:/opt/bitnami/spark/data:rw
+    #volumes:
+    #  - ../airflow/data:/opt/bitnami/spark/data:rw
     volumes:
       - type: bind
         source: ../airflow/data
