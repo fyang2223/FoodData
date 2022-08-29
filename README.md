@@ -48,6 +48,9 @@ docker exec -it namenode bash
 ```
 
 4. 
+![This is an image](/assets/spark_connection.png)
+
+
 
 x. Set up connections in airflow
 conn id: spark_default
@@ -62,6 +65,9 @@ username: root
 port: 22
 extra: {"key_file": "/opt/airflow/keys/AirflowKey"}
 
+
+# Running the ETL Pipeline
+Once the installation steps above have been completed, proceed to use the following to run the DAG.
 
 
 # LINKS

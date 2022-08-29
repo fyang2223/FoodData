@@ -62,7 +62,7 @@ with DAG(
 
     t6 = BashOperator(
         task_id="spark-job",
-        bash_command=f"spark-submit {AIRHOME}/dags/spark-job.py {AIRHOME} {CSVFOLDER}"
+        bash_command=f"spark-submit {AIRHOME}/dags/spark_job.py {AIRHOME} {CSVFOLDER}"
         #application_args=[f"{AIRHOME}", f"{CSVFOLDER}"]
     )
 
