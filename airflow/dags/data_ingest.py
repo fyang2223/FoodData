@@ -1,4 +1,3 @@
-from asyncio.tasks import _T4
 import os
 
 from airflow import DAG
@@ -38,7 +37,7 @@ with DAG(
 
     t3 = BashOperator(
         task_id='Unzip',
-        bash_command=f"unzip {AIRHOME}/data/{ZIPPED_FILENAME} -d {AIRHOME}/data"
+        bash_command=f"unzip -o {AIRHOME}/data/{ZIPPED_FILENAME} -d {AIRHOME}/data"
     )
 
     t4 = SSHOperator(
