@@ -1,9 +1,9 @@
+from asyncio.tasks import _T4
 import os
 
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
-from airflow.contrib.operators.spark_submit_operator import SparkSubmitOperator
 from airflow.providers.ssh.operators.ssh import SSHOperator
 
 from datetime import datetime, timedelta, date
@@ -41,42 +41,21 @@ with DAG(
         bash_command=f"unzip {AIRHOME}/data/{ZIPPED_FILENAME} -d {AIRHOME}/data"
     )
 
-    t4 = BashOperator(
-        task_id='head',
-        # bash_command=f'$SPARK_HOME/sbin/start-master.sh --webui-port 8081'
-        bash_command=f'echo hello'
-    )
-
-    t5 = SSHOperator(
+    t4 = SSHOperator(
         task_id='Load_into_HDFS',
         ssh_conn_id="hadoop_default",
         command=f"/load_data.sh {CSVFOLDER} "
     )
 
-    # t5 = SparkSubmitOperator(
-    #     task_id = "spark-job",
-    #     application = f"{AIRHOME}/dags/spark-job.py",
-    #     conn_id = "spark_default",
-    #     application_args = [f"{AIRHOME}", f"{CSVFOLDER}"]
-    # )
-
-
-    t6 = BashOperator(
-        task_id="spark-job",
+    t5 = BashOperator(
+        task_id="Spark_job",
         bash_command=f"spark-submit {AIRHOME}/dags/spark_job.py {AIRHOME} {CSVFOLDER}"
         #application_args=[f"{AIRHOME}", f"{CSVFOLDER}"]
     )
 
-    # t5.set_downstream(t6)
-    t5.set_downstream(t1)
-    t1.set_downstream(t6)
-    # t7.set_downstream(t8)
-    # t8.set_downstream(t9)
-    # t9.set_downstream(t10)
-
-    # t2.set_downstream(t3)
-    # t1.set_downstream(t2)
-    # t3.set_downstream(t4)
-    # t4.set_downstream(t5)
-
+    t1.set_downstream(t2)
+    t2.set_downstream(t3)
+    t3.set_downstream(t4)
+    t4.set_downstream(t5)
+    
 
