@@ -47,8 +47,9 @@ docker exec -it namenode bash
 ./entrypoint.sh
 ```
 
-4. 
-![This is an image](/assets/spark_connection.png)
+4. Set up the Spark and HDFS connections in Airflow as follows so that there can be communication between the Airflow and Spark/HDFS containers.
+![Spark Connection](/assets/spark_connection.png)
+![HDFS Connection](/assets/hdfs_connection.png)
 
 
 
