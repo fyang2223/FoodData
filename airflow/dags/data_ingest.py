@@ -17,7 +17,7 @@ ZIPPED_FILENAME = "FoodData_{{ ds }}.zip"
 CSVFOLDER = "FoodData_Central_csv_{{ ds }}"
 
 with DAG(
-    "URL_grab_and_ingest",
+    "USDA_ETL_DAG",
     start_date=datetime(2022, 4, 25),
     end_date=datetime(2022, 4, 30),
     schedule_interval=timedelta(days=1)
