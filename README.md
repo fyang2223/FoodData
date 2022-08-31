@@ -7,12 +7,13 @@
     spark_default: "spark" conn type, "spark://spark" host, "7077" port.
     hadoop_default: "ssh" conn type, "namenode" host, "root" username, "22" port, "{"key_file": "/opt/airflow/keys/AirflowKey"}" extra.
 
-# Architecture
-This project uses docker-compose files.
+# Architecture Components
+![Container Architecture](/assets/container_architecture.png)
 
+# Directory Structure
 The ./airflow/data folder on the host machine is where the data is downloaded and unzipped to, and is mounted to both Airflow (/opt/airflow/data) as well as the Hadoop namenode (/data). This is so that the downloaded files can be put into the HDFS filesystem with the simple command `hdfs dfs -put` in the namenode after being downloaded and extracted.
 
-The "KEYS" folder is not included in the top-level github directory but should contain an SSH keypair so that Airflow can use the SSHOperator to connect to the Hadoop namenode. These keys need to be generated externally using 
+The "KEYS" folder is empty for security but should contain an SSH keypair so that Airflow can use the SSHOperator to connect to the Hadoop namenode. These keys need to be generated externally using 
 ```
 ssh-keygen -t ed25519 -N "" -f "AirflowKey"
 ```
@@ -25,21 +26,27 @@ The default docker-compose file of the BDE2020 Hadoop-Spark-Hive project has bee
 The default docker-compose file of Airflow has also been modified to install the Java and Spark binaries.
 
 # Installation Instructions
-1. Start the Airflow docker-compose file first in the airflow folder.
+1. Start the Airflow docker-compose file first in the airflow folder, as the airflow_default network needs to be created before Spark and HDFS can initialize.
 ```
 docker-compose build
 docker-compose up airflow-init
 docker-compose up
 ```
 
-2. Start the Hadoop cluster with docker-compose in the docker-hadoop-spark folder. 
+2. Enter the `Spark` folder, and start the Spark cluster with docker-compose.
 ```
 docker-compose build
 docker-compose up
 ```
-If `docker-compose build` fails, delete the namenode image in Docker Desktop first, and try again.
 
-3. Enter the running namenode container, and execute the `my_entrypoint.sh` script, which copies Airflow's public key located in the mounted volume to the authorized_keys file in the namenode root user's home volume (which is /root, but is /home/user1 for another user called user1). It then starts the SSH service.
+3. Enter the `docker-hadoop-spark` folder and start the Hadoop cluster with docker-compose. If `docker-compose build` fails, delete the namenode image in Docker Desktop first, and try again.
+
+```
+docker-compose build
+docker-compose up
+```
+
+4. Enter the running namenode container with docker exec, and execute the `my_entrypoint.sh` script, which copies Airflow's public key located in the mounted volume to the authorized_keys file in the namenode root user's home volume (which is /root, but is /home/user1 for another user called user1). It then starts the OpenSSH service.
 ```
 docker exec -it namenode bash
 ```
@@ -47,29 +54,20 @@ docker exec -it namenode bash
 ./entrypoint.sh
 ```
 
-4. Set up the Spark and HDFS connections in Airflow as follows so that there can be communication between the Airflow and Spark/HDFS containers.
+5. Set up the Spark and HDFS connections in Airflow as follows so that there can be communication between the Airflow and Spark/HDFS containers.
+
 ![Spark Connection](/assets/spark_connection.png)
+
 ![HDFS Connection](/assets/hdfs_connection.png)
 
-
-
-x. Set up connections in airflow
-conn id: spark_default
-conn type: spark
-host: spark://spark
-port: 7077
-
-conn id: hadoop_default
-conn type: ssh
-host: namenode
-username: root
-port: 22
-extra: {"key_file": "/opt/airflow/keys/AirflowKey"}
-
-
 # Running the ETL Pipeline
-Once the installation steps above have been completed, proceed to use the following to run the DAG.
+1. After setup of the architecture, visit `localhost:8080` in a browser to run the "USDA_ETL_DAG" DAG.
 
+2. For proof of concept, the DAG has been set to run once a day from 25/04/2022 to 30/04/2022, so a simple change to the `end_date` parameter in `data_ingest.py` can allow the DAG to run into the future.
+
+3. Only the 28/04/2022 job will succeed, as that is when the most recent USDA food data was uploaded.
+
+![HDFS Connection](/assets/DAGrun.png)
 
 # LINKS
 - https://medium.com/codex/executing-spark-jobs-with-apache-airflow-3596717bbbe3
