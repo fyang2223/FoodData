@@ -1,11 +1,5 @@
 # Overview
-- Spark uses the network airflow_default so launch airflow FIRST.
-- The Dockerfile has been updated to execute "USER airflow" and "RUN pip install apache-airflow-providers-apache-spark"
-- SparkSubmiteOperator uses the airflow directory to read from AND output to (once execution of the pyspark script has finished).
-- Add a connection in the airflow UI. "Conn_Id" can be any unique name. Host is spark://"spark", since "spark" is the name of the service in the bitnami/spark docker-compose file, and they are running in the same network (airflow_default).
-- Connections in airflow:
-    spark_default: "spark" conn type, "spark://spark" host, "7077" port.
-    hadoop_default: "ssh" conn type, "namenode" host, "root" username, "22" port, "{"key_file": "/opt/airflow/keys/AirflowKey"}" extra.
+This project pulls data from the publicly available datasets on the USDA website (https://fdc.nal.usda.gov/download-datasets.html#bkmk-2). The full collection is downloaded (under subheading "Full Download of All Data Types"), which is a 1.3GB collection of CSVs updated every 6 months of food labelling and nutritional information. The output returned after processing is a single CSV dataset which consists of the average nutritional amounts for each food category as defined by the USDA. This output is small enough to be consumed by any in-memory data analysis tool for visualisation or dashboarding.
 
 # Architecture Components
 ![Container Architecture](/assets/container_architecture.png)
@@ -66,6 +60,8 @@ docker exec -it namenode bash
 2. For proof of concept, the DAG has been set to run once a day from 25/04/2022 to 30/04/2022, so a simple change to the `end_date` parameter in `data_ingest.py` can allow the DAG to run into the future.
 
 3. Only the 28/04/2022 job will succeed, as that is when the most recent USDA food data was uploaded.
+
+4. The output is located in `/airflow/data/output.csv`.
 
 ![HDFS Connection](/assets/DAGrun.png)
 

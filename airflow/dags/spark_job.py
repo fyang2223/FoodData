@@ -37,7 +37,7 @@ if __name__ == '__main__':
 
     pandasres = res.toPandas()
 
-    pandasres.to_csv(f"{AIRHOME}/output.csv")
+    pandasres.to_csv(f"{AIRHOME}/data/output.csv")
 
 
     spark.stop()
