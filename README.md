@@ -65,6 +65,8 @@ docker exec -it namenode bash
 
 5. Matplotlib has been used to create a graph to visualise an excerpt of the `output.csv` data. This file is called `CarbohydrateContent.png` and can be found in the home folder.
 
+![Visualisation](/assets/CarbohydrateContent.png)
+
 ![HDFS Connection](/assets/DAGrun.png)
 
 # LINKS
