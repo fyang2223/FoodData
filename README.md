@@ -63,6 +63,8 @@ docker exec -it namenode bash
 
 4. The output is located in `/airflow/data/output.csv`.
 
+5. Matplotlib has been used to create a graph to visualise an excerpt of the `output.csv` data. This file is called `CarbohydrateContent.png` and can be found in the home folder.
+
 ![HDFS Connection](/assets/DAGrun.png)
 
 # LINKS

@@ -8,7 +8,7 @@ from airflow.providers.ssh.operators.ssh import SSHOperator
 from datetime import datetime, timedelta, date
 
 from requestURL import pingLink
-# from visualisation import makegraph
+from visualisation import makegraph
 
 AIRHOME = os.environ.get("AIRFLOW_HOME", "/opt/airflow")
 URL = "https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_csv_{{ ds }}.zip"
@@ -52,9 +52,17 @@ with DAG(
         #application_args=[f"{AIRHOME}", f"{CSVFOLDER}"]
     )
 
+    t6 = PythonOperator(
+        task_id='Make_Graph',
+        python_callable=makegraph, #Successful if 200 response code
+        op_kwargs=dict(
+            csv_loc=f"{AIRHOME}/data/output.csv" 
+        )
+    )
+
     t1.set_downstream(t2)
     t2.set_downstream(t3)
     t3.set_downstream(t4)
     t4.set_downstream(t5)
+    t5.set_downstream(t6)
     
-

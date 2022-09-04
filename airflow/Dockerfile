@@ -28,6 +28,6 @@ RUN export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
 
 USER airflow
 
-RUN pip install apache-airflow-providers-apache-spark pandas
+RUN pip install apache-airflow-providers-apache-spark pandas matplotlib
 
 USER root
