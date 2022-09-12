@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Serverless Specification template describing your function.
+Resources:
+  IngestAPItoS3:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.9
+      CodeUri: .
+      Description: ''
+      MemorySize: 128
+      Timeout: 60
+      Role: 'arn:aws:iam::082206757367:role/LambdaAccessS3'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-08cfbe63ce565c926
+        SubnetIds:
+          - subnet-0006cb501e9679698
+      Environment:
+        Variables:
+          X_api_key: JYPZxnEqMPa19BYwm6coQDx1Dh8owjRTAvinFOQh
+          dest_bucket: usdacsvs
