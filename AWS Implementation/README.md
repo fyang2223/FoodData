@@ -3,7 +3,7 @@ This file ingests data from the official USDA API (https://app.swaggerhub.com/ap
 
 The module `requests` is not included in the runtime of lambda, and so that module must be zipped with `lambda_function.py` before being deployed to the Lambda service. To see how to do this, visit the **Deployment package with dependencies** and **Deploy your .zip file to the function** sections in https://docs.aws.amazon.com/lambda/latest/dg/python-package.html#python-package-dependencies. 
 
-![File Structure](/assets/dependencies.png)
+![File Structure](/AWS%20Implementation/assets/dependencies.png)
 
 To test the Step function, pass the following json-formatted input, given that the `FDC_ID_RANGE` in `lambda_function.py` is of size 10. This will cause three instances of the function to run, resulting in three appropriately titled csv files in the `usdacsvs` bucket.
 ```
@@ -16,7 +16,7 @@ To test the Step function, pass the following json-formatted input, given that t
 
 Delete the above.
 
-![File Structure](/assets/state_input_as_payload.png)
+![File Structure](/AWS%20Implementation/assets/state_input_as_payload.png)
 
 
 
